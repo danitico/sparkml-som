@@ -1,4 +1,4 @@
-package xyz.florentforest.spark.ml.som
+package org.apache.spark.ml.clustering.som
 
 import org.apache.spark.sql.DataFrame
 

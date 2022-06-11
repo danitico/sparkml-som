@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-package xyz.florentforest.spark.ml.som
+package org.apache.spark.ml.clustering.som
 
 import org.apache.spark.ml.param._
+import org.apache.spark.ml.util.SchemaUtils
 import org.apache.spark.sql.types.{IntegerType, StructType}
-import xyz.florentforest.spark.ml.util.SchemaUtils
 
 trait SOMParams extends Params with HasMaxIter with HasFeaturesCol with HasSeed with HasPredictionCol with HasTol {
 

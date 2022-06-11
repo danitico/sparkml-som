@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-package xyz.florentforest.spark.ml.util
+package org.apache.spark.ml.util
 
 import org.apache.spark.ml.linalg.{SparseVector, Vector, Vectors}
-import xyz.florentforest.spark.ml.linalg.BLAS.dot
+import org.apache.spark.ml.linalg.BLAS.dot
 
 object MLUtils {
 

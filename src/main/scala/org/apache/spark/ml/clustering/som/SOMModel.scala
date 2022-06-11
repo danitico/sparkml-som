@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package xyz.florentforest.spark.ml.som
+package org.apache.spark.ml.clustering.som
 
 import org.apache.spark.ml.Model
 import org.apache.spark.ml.linalg.Vector

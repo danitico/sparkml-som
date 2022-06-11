@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package xyz.florentforest.spark.ml.som
+package org.apache.spark.ml.clustering.som
 
 import java.nio.ByteBuffer
 import java.util.{Random => JavaRandom}
@@ -30,10 +30,9 @@ import org.apache.spark.sql.functions.col
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{Dataset, Row, SparkSession}
 import org.apache.spark.storage.StorageLevel
-import xyz.florentforest.spark.ml.util.MLUtils
 
 import scala.util.hashing.MurmurHash3
-import xyz.florentforest.spark.ml.linalg.BLAS.{axpy, scal}
+import BLAS.{axpy, scal}
 
 class SOM(override val uid: String) extends Estimator[SOMModel] with SOMParams {
 
@@ -270,7 +269,7 @@ class SOM(override val uid: String) extends Estimator[SOMModel] with SOMParams {
     * Temperature decay function
     */
   private def computeTemperature(iter: Int): Double = $(temperatureDecay) match {
-    case "exponential" => $(tMax) * pow( ($(tMin) / $(tMax)), (iter.toDouble / ($(maxIter) - 1) ) )
+    case "exponential" => $(tMax) * pow($(tMin) / $(tMax), iter.toDouble / ($(maxIter) - 1))
     case "linear" => $(tMax) + (iter.toDouble / ($(maxIter) - 1)) * ($(tMin) - $(tMax))
   }
 
@@ -334,7 +333,7 @@ object SOM {
 
   /**
     * Returns the squared Euclidean distance between two vectors computed by
-    * [[xyz.florentforest.spark.ml.util.MLUtils#fastSquaredDistance]].
+    * [[MLUtils#fastSquaredDistance]].
     */
   def fastSquaredDistance(v1: VectorWithNorm, v2: VectorWithNorm): Double = {
     MLUtils.fastSquaredDistance(v1.vector, v1.norm, v2.vector, v2.norm)
@@ -346,7 +345,7 @@ object SOM {
 /**
   * A vector with its norm for fast distance computation.
   *
-  * @see [[xyz.florentforest.spark.ml.som.SOM#fastSquaredDistance]]
+  * @see [[SOM#fastSquaredDistance]]
   */
 class VectorWithNorm(val vector: Vector, val norm: Double) extends Serializable {
 

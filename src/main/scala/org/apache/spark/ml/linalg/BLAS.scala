@@ -15,9 +15,8 @@
  * limitations under the License.
  */
 
-package xyz.florentforest.spark.ml.linalg
+package org.apache.spark.ml.linalg
 
-import org.apache.spark.ml.linalg._
 import com.github.fommil.netlib.BLAS.{getInstance => NativeBLAS}
 import com.github.fommil.netlib.{F2jBLAS, BLAS => NetlibBLAS}
 

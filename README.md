@@ -19,13 +19,13 @@ This version is meant to be simpler to use and more concise, performant and comp
 ## Quickstart
 
 ```scala
-import xyz.florentforest.spark.ml.som.SOM
+import org.apache.spark.ml.clustering.som.SOM
 
 val data: DataFrame = ???
 
 val som = new SOM()
-    .setHeight(20)
-    .setWidth(20)
+        .setHeight(20)
+        .setWidth(20)
 
 val model = som.fit(data)
 
@@ -44,24 +44,6 @@ println(cost.mkString("[", ",", "]"))
 ```
 
 ...now plot it easily in your favorite visualization tool!
-
-## Installation
-
-The sparkml-som artifact is available on Maven Central, so the quickest way to use this package in your projects is by simply adding this dependency line to sbt:
-
-```sbt
-"xyz.florentforest" %% "sparkml-som" % "0.2.1"
-```
-
-An alternative way, if for example your want to modify this project, is to fork/clone the repository, compile it using sbt and publish it locally:
-
-```shell
-$ git clone git@github.com:FlorentF9/sparkml-som.git
-$ cd sparkml-som
-$ sbt publishLocal
-```
-
-Then, add the same dependency line to your sbt.
 
 ## Parameters
 
@@ -83,9 +65,3 @@ Self-organizing maps essentially depend on their topology, the neighborhood func
 ## Implementation details
 
 The package depends only on spark (core, sql and mllib) and netlib for native linear algebra. It will use native BLAS libraries if possible. Because of classes and methods marked as private in spark, some utility and linear algebra code from spark had to be included into the project: _util.SchemaUtils_, _util.MLUtils_ and _linalg.BLAS_. I kept the original license and tried to keep the code minimal with only the parts needed by SOM.
-
-## To-dos
-
-* Add hexagonal grid topology
-* Add visualization capabilities
-* I did not extend MLWritable/MLReadable yet, so the model cannot be saved or loaded. However, as all the parameteres are stored in the `SOMModel.prototypes` variable of type `Array[Vector]`, it is straightforward to save the parameters into a file.
