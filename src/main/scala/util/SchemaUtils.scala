@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.spark.ml.util
+package util
 
 import org.apache.spark.sql.types.{DataType, NumericType, StructField, StructType}
 

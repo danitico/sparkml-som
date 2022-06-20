@@ -19,13 +19,13 @@ This version is meant to be simpler to use and more concise, performant and comp
 ## Quickstart
 
 ```scala
-import org.apache.spark.ml.clustering.som.SOM
+import som.SOM
 
 val data: DataFrame = ???
 
 val som = new SOM()
-        .setHeight(20)
-        .setWidth(20)
+  .setHeight(20)
+  .setWidth(20)
 
 val model = som.fit(data)
 

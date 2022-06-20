@@ -15,14 +15,16 @@
  * limitations under the License.
  */
 
-package org.apache.spark.ml.clustering.som
+package som
 
 import org.apache.spark.ml.Model
-import org.apache.spark.ml.linalg.Vector
+import org.apache.spark.ml.linalg.{Vector, Vectors}
 import org.apache.spark.ml.param.ParamMap
 import org.apache.spark.sql.functions.{col, udf}
 import org.apache.spark.sql.types.StructType
 import org.apache.spark.sql.{DataFrame, Dataset, Row}
+
+import scala.collection.mutable
 
 class SOMModel(override val uid: String, val prototypes: Array[Vector]) extends Model[SOMModel] with SOMParams {
 
@@ -76,7 +78,7 @@ class SOMModel(override val uid: String, val prototypes: Array[Vector]) extends 
   def transform(dataset: Dataset[_]): DataFrame = {
     transformSchema(dataset.schema, logging = true)
 
-    val predictUDF = udf((vector: Vector) => predict(vector))
+    val predictUDF = udf((vector: mutable.WrappedArray[Double]) => predict(Vectors.dense(vector.toArray)))
 
     dataset.withColumn($(predictionCol), predictUDF(col($(featuresCol))))
   }

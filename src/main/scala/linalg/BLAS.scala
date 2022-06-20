@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 
-package org.apache.spark.ml.linalg
+package linalg
 
 import com.github.fommil.netlib.BLAS.{getInstance => NativeBLAS}
 import com.github.fommil.netlib.{F2jBLAS, BLAS => NetlibBLAS}
+import org.apache.spark.ml
+import org.apache.spark.ml.linalg.{DenseMatrix, DenseVector, SparseVector}
 
 /**
   * BLAS routines for MLlib's vectors and matrices.
@@ -39,7 +41,7 @@ object BLAS extends Serializable {
   /**
     * y += a * x
     */
-  def axpy(a: Double, x: Vector, y: Vector): Unit = {
+  def axpy(a: Double, x: ml.linalg.Vector, y: ml.linalg.Vector): Unit = {
     require(x.size == y.size)
     y match {
       case dy: DenseVector =>
@@ -100,7 +102,7 @@ object BLAS extends Serializable {
   /**
     * dot(x, y)
     */
-  def dot(x: Vector, y: Vector): Double = {
+  def dot(x: ml.linalg.Vector, y: ml.linalg.Vector): Double = {
     require(x.size == y.size,
       "BLAS.dot(x: Vector, y:Vector) was given Vectors with non-matching sizes:" +
         " x.size = " + x.size + ", y.size = " + y.size)
@@ -176,7 +178,7 @@ object BLAS extends Serializable {
   /**
     * y = x
     */
-  def copy(x: Vector, y: Vector): Unit = {
+  def copy(x: ml.linalg.Vector, y: ml.linalg.Vector): Unit = {
     val n = y.size
     require(x.size == n)
     y match {
@@ -215,7 +217,7 @@ object BLAS extends Serializable {
   /**
     * x = a * x
     */
-  def scal(a: Double, x: Vector): Unit = {
+  def scal(a: Double, x: ml.linalg.Vector): Unit = {
     x match {
       case sx: SparseVector =>
         f2jBLAS.dscal(sx.values.length, a, sx.values, 1)
@@ -239,7 +241,7 @@ object BLAS extends Serializable {
     *
     * @param U the upper triangular part of the matrix in a [[DenseVector]](column major)
     */
-  def spr(alpha: Double, v: Vector, U: DenseVector): Unit = {
+  def spr(alpha: Double, v: ml.linalg.Vector, U: DenseVector): Unit = {
     spr(alpha, v, U.values)
   }
 
@@ -248,7 +250,7 @@ object BLAS extends Serializable {
     *
     * @param U the upper triangular part of the matrix packed in an array (column major)
     */
-  def spr(alpha: Double, v: Vector, U: Array[Double]): Unit = {
+  def spr(alpha: Double, v: ml.linalg.Vector, U: Array[Double]): Unit = {
     val n = v.size
     v match {
       case DenseVector(values) =>

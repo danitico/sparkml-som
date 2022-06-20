@@ -1,4 +1,4 @@
-package org.apache.spark.ml.clustering.som
+package som
 
 import org.apache.spark.sql.DataFrame
 

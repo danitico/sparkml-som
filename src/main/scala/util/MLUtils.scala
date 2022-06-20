@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-package org.apache.spark.ml.util
+package util
 
 import org.apache.spark.ml.linalg.{SparseVector, Vector, Vectors}
-import org.apache.spark.ml.linalg.BLAS.dot
+import linalg.BLAS.dot
 
 object MLUtils {
 

@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.apache.spark.ml.clustering.som
+package som
 
 import java.nio.ByteBuffer
 import java.util.{Random => JavaRandom}
@@ -32,7 +32,9 @@ import org.apache.spark.sql.{Dataset, Row, SparkSession}
 import org.apache.spark.storage.StorageLevel
 
 import scala.util.hashing.MurmurHash3
-import BLAS.{axpy, scal}
+import scala.collection.mutable
+import linalg.BLAS.{axpy, scal}
+import util.MLUtils
 
 class SOM(override val uid: String) extends Estimator[SOMModel] with SOMParams {
 
@@ -80,13 +82,9 @@ class SOM(override val uid: String) extends Estimator[SOMModel] with SOMParams {
 
     val handlePersistence = dataset.storageLevel == StorageLevel.NONE
 
-    val instances: RDD[Vector] = dataset.select(col($(featuresCol))).rdd.map {
-      case Row(point: Vector) => point
-    }
-
-    if (handlePersistence) {
-      instances.persist(StorageLevel.MEMORY_AND_DISK)
-    }
+    val instances: RDD[Vector] = dataset.select(col($(featuresCol))).rdd.map(point => {
+      Vectors.dense(point.getList[Double](0).toArray().map(_.asInstanceOf[Double]))
+    })
 
     val parentModel = run(instances)
     val model = copyValues(new SOMModel(uid, parentModel.prototypes).setParent(this))
@@ -130,23 +128,24 @@ class SOM(override val uid: String) extends Estimator[SOMModel] with SOMParams {
   }
 
   def run(data: RDD[Vector]): SOMModel = {
+    val dataCached = data.cache()
 
-    if (data.getStorageLevel == StorageLevel.NONE) {
+    if (dataCached.getStorageLevel == StorageLevel.NONE) {
       logWarning("The input data is not directly cached, which may hurt performance if its"
         + " parent RDDs are also uncached.")
     }
 
     // Compute squared norms and cache them.
-    val norms = data.map(Vectors.norm(_, 2.0))
+    val norms = dataCached.map(Vectors.norm(_, 2.0))
     norms.persist()
-    val zippedData = data.zip(norms).map { case (v, norm) =>
+    val zippedData = dataCached.zip(norms).map { case (v, norm) =>
       new VectorWithNorm(v, norm)
     }
     val model = runAlgorithm(zippedData)
     norms.unpersist()
 
     // Warn at the end of the run as well, for increased visibility.
-    if (data.getStorageLevel == StorageLevel.NONE) {
+    if (dataCached.getStorageLevel == StorageLevel.NONE) {
       logWarning("The input data was not directly cached, which may hurt performance if its"
         + " parent RDDs are also uncached.")
     }
@@ -293,7 +292,7 @@ class SOM(override val uid: String) extends Estimator[SOMModel] with SOMParams {
     */
   private def initRandom(data: RDD[VectorWithNorm]): Array[VectorWithNorm] = {
     // Select with replacement
-    data.takeSample(true, $(height) * $(width), new XORShiftRandom($(seed)).nextInt())
+    data.takeSample(withReplacement = true, $(height) * $(width), new XORShiftRandom($(seed)).nextInt())
   }
 
 }
@@ -407,7 +406,7 @@ object Main extends App {
 
   final val N = 10000
   val rng = new JavaRandom()
-  val data = Seq.tabulate(N){ _ => (0.0, Vectors.dense(rng.nextDouble, rng.nextDouble, rng.nextDouble)) }
+  val data = Seq.tabulate(N){ _ => (0.0, Seq(rng.nextDouble, rng.nextDouble, rng.nextDouble)) }
 
   val df = data.toDF("label", "features")
 
