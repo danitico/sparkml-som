@@ -86,6 +86,10 @@ class SOM(override val uid: String) extends Estimator[SOMModel] with SOMParams {
       Vectors.dense(point.getList[Double](0).toArray().map(_.asInstanceOf[Double]))
     })
 
+    if (handlePersistence) {
+      instances.persist(StorageLevel.MEMORY_AND_DISK)
+    }
+
     val parentModel = run(instances)
     val model = copyValues(new SOMModel(uid, parentModel.prototypes).setParent(this))
     val summary = new SOMTrainingSummary(
