@@ -2,7 +2,7 @@
 
 ## Notice
 
-**This repository is a fork of [FlorentF9's repository](https://github.com/FlorentF9/sparkml-som)**. The changes applied in this fork are:
+**This repository is a fork from [FlorentF9's repository](https://github.com/FlorentF9/sparkml-som)**. The changes applied in this fork are:
 - Fixing fit and predict function in order to work correctly with DataFrames
 - Bumping the version of Scala from 2.11.8 to 2.12.15
 - Bumping the version of Apache Spark from 2.2.0 to 3.2.1
