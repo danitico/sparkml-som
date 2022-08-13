@@ -1,6 +1,13 @@
 # Spark ML SOM (Self-Organizing Map)
 
-**NEW**: cost function history can be retrieved in SOMTrainingSummary, in order to check convergence! (see Quickstart)
+## Notice
+
+**This repository is a fork of [FlorentF9's repository](https://github.com/FlorentF9/sparkml-som)**. The changes applied in this fork are:
+- Fixing fit and predict function in order to work correctly with DataFrames
+- Bumping the version of Scala from 2.11.8 to 2.12.15
+- Bumping the version of Apache Spark from 2.2.0 to 3.2.1
+
+## Description
 
 SparkML-SOM is the only available distributed implementation of Kohonen's Self-Organizing-Map algorithm built on top of Spark ML (the Dataset-based API of Spark MLlib) and fully compatible with Spark versions 2.2.0 and newer. It extends Spark's [`Estimator`](https://github.com/apache/spark/blob/v2.2.0/mllib/src/main/scala/org/apache/spark/ml/Estimator.scala) and [`Model`](https://github.com/apache/spark/blob/v2.2.0/mllib/src/main/scala/org/apache/spark/ml/Model.scala) classes.
 
@@ -13,8 +20,6 @@ The implemented algorithm is the Kohonen batch algorithm, which is very close to
 
 The same algorithm was implemented by one of my colleagues: https://github.com/TugdualSarazin/spark-clustering (project now maintained by [C4E](https://github.com/Clustering4Ever/Clustering4Ever)).
 This version is meant to be simpler to use and more concise, performant and compatible with Spark ML Pipelines and Datasets/DataFrames.
-
-**This code will soon be integrated into the [C4E clustering project](https://github.com/Clustering4Ever/Clustering4Ever)**, so be sure to check out this project if you want to explore more clustering algorithms. In case you only need SOM, keep using this code which will remain independent and up-to-date.
 
 ## Quickstart
 
